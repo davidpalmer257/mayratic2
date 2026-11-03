@@ -7,38 +7,451 @@ import { ContactForm, useContact } from "./site-shell";
 import { Assessment } from "./assessment";
 import { HeroStack } from "./hero-stack";
 import { products } from "./products";
+import { contactInfo } from "@/lib/site";
 import { commonFaqs, processSteps, serviceItems } from "@/content/pages";
 
-const intros: Record<string,{eyebrow:string;title:string;body:string}>={
- "why-mayratic":{eyebrow:"WHY MAYRATIC",title:"Built around the way you work.",body:"The best software earns its place in your business. We work with you to understand the process, build what matters, and put it into production."},
- services:{eyebrow:"WHAT WE BUILD",title:"Your business. Better connected.",body:"Web platforms, mobile applications, and intelligent automation. One team to take your idea from its first question to software your people can use."},
- "ai-automation":{eyebrow:"AI & AUTOMATION",title:"Make AI useful. Put it to work.",body:"Start with the workflow, the context, and the outcome. We build AI systems, agents, and chatbots around the work your business actually needs to do."},
- security:{eyebrow:"SECURITY & GOVERNANCE",title:"Trust belongs in the foundation.",body:"The systems behind your business need clear boundaries. Access, visibility, and responsible integration belong in the design from the start."},
- products:{eyebrow:"BUILT BY MAYRATIC",title:"Real work. Ready-made software.",body:"Explore platforms for operations, sales, and real estate. Start with a product and discuss how it could fit the way your business works."},
- "getting-started":{eyebrow:"FROM IDEA TO PRODUCTION",title:"A clear path to your first release.",body:"You bring the business context. We bring design and engineering. Together, we turn the right problem into software your team can put to work."},
- assessment:{eyebrow:"FIND YOUR STARTING POINT",title:"What could work better?",body:"Five questions about your business, your tools, and the work that gets in the way. Explore a practical starting point for your next project."},
- tools:{eyebrow:"A LITTLE HELP, ON US",title:"Useful tools. Less busywork.",body:"Find the right contact, check an email address, and prepare your next conversation. Explore Mayratic’s free outreach tools."},
- contact:{eyebrow:"LET’S TALK",title:"What would you like to build?",body:"Tell us about your business, the work you want to improve, or the idea you want to bring to life. We’ll work out the next step together."},
- about:{eyebrow:"ABOUT MAYRATIC",title:"A studio built for real-world work.",body:"Based in Dubai and working with businesses worldwide. We design and build intelligent software that connects ideas to everyday operations."},
+const intros: Record<string, { eyebrow: string; title: string; body: string }> = {
+  "why-mayratic": {
+    eyebrow: "WHY MAYRATIC",
+    title: "Built around the way you work.",
+    body: "The best software earns its place in your business. We work with you to understand the process, build what matters, and put it into production.",
+  },
+  services: {
+    eyebrow: "WHAT WE BUILD",
+    title: "Your business. Better connected.",
+    body: "Web platforms, mobile applications, and intelligent automation. One team to take your idea from its first question to software your people can use.",
+  },
+  "ai-automation": {
+    eyebrow: "AI & AUTOMATION",
+    title: "Make AI useful. Put it to work.",
+    body: "Start with the workflow, the context, and the outcome. We build AI systems, agents, and chatbots around the work your business actually needs to do.",
+  },
+  security: {
+    eyebrow: "SECURITY & GOVERNANCE",
+    title: "Trust belongs in the foundation.",
+    body: "The systems behind your business need clear boundaries. Access, visibility, and responsible integration belong in the design from the start.",
+  },
+  products: {
+    eyebrow: "BUILT BY MAYRATIC",
+    title: "Real work. Ready-made software.",
+    body: "Explore platforms for operations, sales, and real estate. Start with a product and discuss how it could fit the way your business works.",
+  },
+  "getting-started": {
+    eyebrow: "FROM IDEA TO PRODUCTION",
+    title: "A clear path to your first release.",
+    body: "You bring the business context. We bring design and engineering. Together, we turn the right problem into software your team can put to work.",
+  },
+  assessment: {
+    eyebrow: "FIND YOUR STARTING POINT",
+    title: "What could work better?",
+    body: "Five questions about your business, your tools, and the work that gets in the way. Explore a practical starting point for your next project.",
+  },
+  tools: {
+    eyebrow: "A LITTLE HELP, ON US",
+    title: "Useful tools. Less busywork.",
+    body: "Find the right contact, check an email address, and prepare your next conversation. Explore Mayratic’s free outreach tools.",
+  },
+  contact: {
+    eyebrow: "LET’S TALK",
+    title: "What would you like to build?",
+    body: "Tell us about your business, the work you want to improve, or the idea you want to bring to life. We’ll work out the next step together.",
+  },
+  about: {
+    eyebrow: "ABOUT MAYRATIC",
+    title: "A studio built for real-world work.",
+    body: "Based in Dubai and working with businesses worldwide. We design and build intelligent software that connects ideas to everyday operations.",
+  },
 };
 
-export function ContentPage({slug}:{slug:string}){
- const intro=intros[slug];
- const contact=useContact();
- const root=useRef<HTMLElement>(null);
- return <main id="main" className="inner-main" ref={root}><div className="site-rail-medium"><section className="page-intro"><div><span className="eyebrow">{intro.eyebrow}</span><h1>{intro.title}</h1>{!["assessment","contact"].includes(slug)&&<button className="btn btn-dark" onClick={()=>contact()}>Talk to our team <Arrow/></button>}</div><p>{intro.body}</p></section>
- {slug==="assessment"?<Assessment/>:<div className="page-content">
- {slug==="services"&&<><div className="service-grid">{serviceItems.map(item=><article className="service-card" key={item.number}><span className="eyebrow">{item.number} / MAYRATIC</span><h2>{item.title}</h2><p>{item.description}</p><button onClick={()=>contact(`I’d like to discuss ${item.title.toLowerCase()}.`)}>Let’s explore it <Arrow/></button></article>)}</div><Faqs/></>}
- {slug==="products"&&<>{products.map(p=><article id={p.name.toLowerCase()} key={p.name} className="product-detail"><img src={p.image} alt={p.alt}/><div><span className="eyebrow">{p.category}</span><h2>{p.name}</h2><h3>{p.title}</h3><p>{p.description}</p>{p.name==="OrbitLead"?<button className="btn btn-dark" onClick={()=>contact("I’d like an OrbitLead demo.")}>Book a demo <Arrow/></button>:<a href={p.href} target="_blank" rel="noreferrer" className="btn btn-dark">{p.cta}<Arrow/></a>}</div></article>)}<Faqs/></>}
- {slug==="getting-started"&&<><div className="steps-list">{processSteps.map(([number,title,body])=><article className="step-row" key={number}><span>{number}</span><h2>{title}</h2><p>{body}</p></article>)}</div><Faqs/></>}
- {slug==="why-mayratic"&&<><section className="page-section"><div><span className="eyebrow">01 / UNDERSTANDING</span><h2>The process comes first.</h2></div><div><p>A website, an app, or an AI agent is useful when it solves a real problem. We begin with the people doing the work and the outcome they need.</p><p>That context shapes the first release: what it should do, what it should connect to, and what can wait.</p><ul><li>Understand the workflow before choosing the technology</li><li>Agree the users, scope, and first useful outcome</li><li>Keep the decisions visible as the project develops</li></ul></div></section><section className="page-section"><div><span className="eyebrow">02 / OWNERSHIP</span><h2>Your product.<br/>Your foundation.</h2></div><div><p>We build custom software to become part of your business. Ownership, deployment access, source code, and third-party dependencies are defined as part of the engagement.</p><p>The handover should make the system understandable to the people who will operate it, maintain it, and build on it.</p></div></section><section className="page-section"><div><span className="eyebrow">03 / PRODUCTION</span><h2>Built to earn<br/>its place.</h2></div><div><p>Design and development lead to the same place: a product your team can use. We plan the deployment, test important workflows, and work through the details of the first release.</p><Link className="btn btn-outline" href="/getting-started/">See how we build <Arrow/></Link></div></section></>}
- {slug==="ai-automation"&&<><div className="ai-page-visual"><HeroStack/></div><div className="service-grid">{[{title:"AI systems",body:"Connect the right information to the decisions and processes that need it. We scope systems around your data, workflow, and desired outcome."},{title:"AI agents",body:"Give a defined task to an agent with the context, tools, and boundaries it needs. Start with a focused workflow and clear human oversight."},{title:"AI chatbots",body:"Bring conversational interfaces to customer support, sales, or internal knowledge, connected to the sources your team actually uses."}].map((item,i)=><article className="service-card" key={item.title}><span className="eyebrow">0{i+1} / INTELLIGENT SOFTWARE</span><h2>{item.title}</h2><p>{item.body}</p><button onClick={()=>contact(`I’d like to explore ${item.title.toLowerCase()}.`)}>Discuss your workflow <Arrow/></button></article>)}</div><section className="page-section"><div><span className="eyebrow">USEFUL BEFORE AMBITIOUS</span><h2>Start with one<br/>real workflow.</h2></div><div><p>Choose a repetitive process, identify the tools it touches, and agree what a useful result looks like. Then test the approach with the people who know the work.</p><ul><li>Define the task and the success criteria</li><li>Review data access and integration requirements</li><li>Set boundaries, handoffs, and human review</li><li>Measure the result before expanding the scope</li></ul></div></section></>}
- {slug==="security"&&<><div className="security-page-visual"><img src="/v4/security/hero-lock.svg" alt="A lock formed from connected layers"/><span className="eyebrow">CLEAR BOUNDARIES. VISIBLE ACTIONS.</span></div>{[{eyebrow:"01 / ACCESS",title:"The right access.\nFor the right people.",body:"Roles and permissions should reflect how the business operates. We agree who needs access to which data, workflows, and administrative actions, then design those boundaries into the application.",list:["Scoped roles and permissions","Authentication matched to the application","Separation of user and administrative actions"]},{eyebrow:"02 / VISIBILITY",title:"Know what\nyour systems do.",body:"Important actions should be understandable. Where the project requires them, we build activity records, error visibility, and operational monitoring into the scope.",list:["Activity and audit requirements defined early","Useful error reporting and monitoring","Clear responsibility for operational access"]},{eyebrow:"03 / INTEGRATION",title:"Connect carefully.\nOperate deliberately.",body:"Every integration brings dependencies and access requirements. We review available APIs, define how credentials are managed, and agree how the system will be deployed and maintained.",list:["Review third-party access and dependencies","Keep secrets out of client applications","Plan deployment, maintenance, and handover"]}].map(item=><section key={item.eyebrow} className="page-section"><div><span className="eyebrow">{item.eyebrow}</span><h2 style={{whiteSpace:"pre-line"}}>{item.title}</h2></div><div><p>{item.body}</p><ul>{item.list.map(x=><li key={x}>{x}</li>)}</ul></div></section>)}</>}
- {slug==="tools"&&<div className="service-grid">{[{title:"Email Finder",body:"Find professional email addresses for your next relevant conversation.",href:"https://www.mayratic.com/tools/email-finder"},{title:"Email Verifier",body:"Check addresses before outreach using Mayratic’s email verification tool.",href:"https://www.mayratic.com/tools/email-verifier"},{title:"Outreach Generator",body:"Prepare a more considered opening message for your next prospect.",href:"https://www.mayratic.com/tools/outreach-generator"}].map((tool,i)=><article key={tool.title} className="service-card"><span className="eyebrow">0{i+1} / FREE TOOL</span><h2>{tool.title}</h2><p>{tool.body}</p><a href={tool.href} target="_blank" rel="noreferrer">Open {tool.title}<Arrow/></a></article>)}</div>}
- {slug==="contact"&&<div className="contact-page-grid"><div className="contact-page-info"><h2>A conversation.<br/>A clearer next step.</h2><p>Book a 30-minute call to discuss your project, understand the scope, and explore how we can help.</p><a href="https://calendly.com/abdelsalami2016/30min" target="_blank" rel="noreferrer">Book a call <Arrow/></a><span className="eyebrow">DUBAI, UNITED ARAB EMIRATES</span><p>Clover Bay Tower, 8th Floor<br/>Marasi Drive, Business Bay<br/>Dubai, UAE</p><a href="tel:+971582568057">+971 58 256 8057 <Arrow/></a><a href="https://wa.me/971582568057" target="_blank" rel="noreferrer">Talk on WhatsApp <Arrow/></a></div><ContactForm/></div>}
- {slug==="about"&&<><section className="page-section founder-section"><div><img src="/founder.jpg" alt="Abdoul Salam Ally, Founder and CEO of Mayratic"/></div><div><span className="eyebrow">A NOTE FROM OUR FOUNDER</span><h2>“Everyone is selling AI. Almost no one is shipping it.”</h2><p>We build the opposite way. We sit inside your business, learn how it truly runs, and craft software that earns its place.</p><span className="founder-name">Abdoul Salam Ally</span><span className="eyebrow">FOUNDER & CEO, MAYRATIC</span></div></section><section className="page-section"><div><span className="eyebrow">FROM DUBAI, OUTWARD</span><h2>Ideas become<br/>working systems.</h2></div><div><p>Mayratic brings design, software engineering, and intelligent automation together. We build custom products and develop our own platforms for business operations, sales, and real estate.</p><p>We also work across branding and premium packaging, connecting the digital experience to the physical touchpoints of a business.</p><Link className="btn btn-outline" href="/products/">Meet our products <Arrow/></Link></div></section></>}
- {slug!=="contact"&&<section className="page-closing"><h2>Let’s build<br/>what comes next.</h2><p>Tell us where the work could work better.</p><button className="btn" onClick={()=>contact()}>Talk to our team <Arrow/></button></section>}
- </div>}</div></main>;
+export function ContentPage({ slug }: { slug: string }) {
+  const intro = intros[slug];
+  const contact = useContact();
+  const root = useRef<HTMLElement>(null);
+  return (
+    <main id="main" className="inner-main" ref={root}>
+      <div className="site-rail-medium">
+        <section className="page-intro">
+          <div>
+            <span className="eyebrow">{intro.eyebrow}</span>
+            <h1>{intro.title}</h1>
+            {!["assessment", "contact"].includes(slug) && (
+              <button className="btn btn-dark" onClick={() => contact()}>
+                Talk to our team <Arrow />
+              </button>
+            )}
+          </div>
+          <p>{intro.body}</p>
+        </section>
+        {slug === "assessment" ? (
+          <Assessment />
+        ) : (
+          <div className="page-content">
+            {slug === "services" && (
+              <>
+                <div className="service-grid">
+                  {serviceItems.map((item) => (
+                    <article className="service-card" key={item.number}>
+                      <span className="eyebrow">{item.number} / MAYRATIC</span>
+                      <h2>{item.title}</h2>
+                      <p>{item.description}</p>
+                      <button onClick={() => contact(`I’d like to discuss ${item.title.toLowerCase()}.`)}>
+                        Let’s explore it <Arrow />
+                      </button>
+                    </article>
+                  ))}
+                </div>
+                <Faqs />
+              </>
+            )}
+            {slug === "products" && (
+              <>
+                {products.map((p) => (
+                  <article id={p.name.toLowerCase()} key={p.name} className="product-detail">
+                    <img src={p.image} alt={p.alt} />
+                    <div>
+                      <span className="eyebrow">{p.category}</span>
+                      <h2>{p.name}</h2>
+                      <h3>{p.title}</h3>
+                      <p>{p.description}</p>
+                      {p.contactMessage ? (
+                        <button className="btn btn-dark" onClick={() => contact(p.contactMessage)}>
+                          Book a demo <Arrow />
+                        </button>
+                      ) : (
+                        <a href={p.href} target="_blank" rel="noreferrer" className="btn btn-dark">
+                          {p.cta}
+                          <Arrow />
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                ))}
+                <Faqs />
+              </>
+            )}
+            {slug === "getting-started" && (
+              <>
+                <div className="steps-list">
+                  {processSteps.map(([number, title, body]) => (
+                    <article className="step-row" key={number}>
+                      <span>{number}</span>
+                      <h2>{title}</h2>
+                      <p>{body}</p>
+                    </article>
+                  ))}
+                </div>
+                <Faqs />
+              </>
+            )}
+            {slug === "why-mayratic" && (
+              <>
+                <section className="page-section">
+                  <div>
+                    <span className="eyebrow">01 / UNDERSTANDING</span>
+                    <h2>The process comes first.</h2>
+                  </div>
+                  <div>
+                    <p>
+                      A website, an app, or an AI agent is useful when it solves a real problem. We begin with
+                      the people doing the work and the outcome they need.
+                    </p>
+                    <p>
+                      That context shapes the first release: what it should do, what it should connect to, and
+                      what can wait.
+                    </p>
+                    <ul>
+                      <li>Understand the workflow before choosing the technology</li>
+                      <li>Agree the users, scope, and first useful outcome</li>
+                      <li>Keep the decisions visible as the project develops</li>
+                    </ul>
+                  </div>
+                </section>
+                <section className="page-section">
+                  <div>
+                    <span className="eyebrow">02 / OWNERSHIP</span>
+                    <h2>
+                      Your product.
+                      <br />
+                      Your foundation.
+                    </h2>
+                  </div>
+                  <div>
+                    <p>
+                      We build custom software to become part of your business. Ownership, deployment access,
+                      source code, and third-party dependencies are defined as part of the engagement.
+                    </p>
+                    <p>
+                      The handover should make the system understandable to the people who will operate it,
+                      maintain it, and build on it.
+                    </p>
+                  </div>
+                </section>
+                <section className="page-section">
+                  <div>
+                    <span className="eyebrow">03 / PRODUCTION</span>
+                    <h2>
+                      Built to earn
+                      <br />
+                      its place.
+                    </h2>
+                  </div>
+                  <div>
+                    <p>
+                      Design and development lead to the same place: a product your team can use. We plan the
+                      deployment, test important workflows, and work through the details of the first release.
+                    </p>
+                    <Link className="btn btn-outline" href="/getting-started/">
+                      See how we build <Arrow />
+                    </Link>
+                  </div>
+                </section>
+              </>
+            )}
+            {slug === "ai-automation" && (
+              <>
+                <div className="ai-page-visual">
+                  <HeroStack />
+                </div>
+                <div className="service-grid">
+                  {[
+                    {
+                      title: "AI systems",
+                      body: "Connect the right information to the decisions and processes that need it. We scope systems around your data, workflow, and desired outcome.",
+                    },
+                    {
+                      title: "AI agents",
+                      body: "Give a defined task to an agent with the context, tools, and boundaries it needs. Start with a focused workflow and clear human oversight.",
+                    },
+                    {
+                      title: "AI chatbots",
+                      body: "Bring conversational interfaces to customer support, sales, or internal knowledge, connected to the sources your team actually uses.",
+                    },
+                  ].map((item, i) => (
+                    <article className="service-card" key={item.title}>
+                      <span className="eyebrow">0{i + 1} / INTELLIGENT SOFTWARE</span>
+                      <h2>{item.title}</h2>
+                      <p>{item.body}</p>
+                      <button onClick={() => contact(`I’d like to explore ${item.title.toLowerCase()}.`)}>
+                        Discuss your workflow <Arrow />
+                      </button>
+                    </article>
+                  ))}
+                </div>
+                <section className="page-section">
+                  <div>
+                    <span className="eyebrow">USEFUL BEFORE AMBITIOUS</span>
+                    <h2>
+                      Start with one
+                      <br />
+                      real workflow.
+                    </h2>
+                  </div>
+                  <div>
+                    <p>
+                      Choose a repetitive process, identify the tools it touches, and agree what a useful
+                      result looks like. Then test the approach with the people who know the work.
+                    </p>
+                    <ul>
+                      <li>Define the task and the success criteria</li>
+                      <li>Review data access and integration requirements</li>
+                      <li>Set boundaries, handoffs, and human review</li>
+                      <li>Measure the result before expanding the scope</li>
+                    </ul>
+                  </div>
+                </section>
+              </>
+            )}
+            {slug === "security" && (
+              <>
+                <div className="security-page-visual">
+                  <img src="/v4/security/hero-lock.svg" alt="A lock formed from connected layers" />
+                  <span className="eyebrow">CLEAR BOUNDARIES. VISIBLE ACTIONS.</span>
+                </div>
+                {[
+                  {
+                    eyebrow: "01 / ACCESS",
+                    title: "The right access.\nFor the right people.",
+                    body: "Roles and permissions should reflect how the business operates. We agree who needs access to which data, workflows, and administrative actions, then design those boundaries into the application.",
+                    list: [
+                      "Scoped roles and permissions",
+                      "Authentication matched to the application",
+                      "Separation of user and administrative actions",
+                    ],
+                  },
+                  {
+                    eyebrow: "02 / VISIBILITY",
+                    title: "Know what\nyour systems do.",
+                    body: "Important actions should be understandable. Where the project requires them, we build activity records, error visibility, and operational monitoring into the scope.",
+                    list: [
+                      "Activity and audit requirements defined early",
+                      "Useful error reporting and monitoring",
+                      "Clear responsibility for operational access",
+                    ],
+                  },
+                  {
+                    eyebrow: "03 / INTEGRATION",
+                    title: "Connect carefully.\nOperate deliberately.",
+                    body: "Every integration brings dependencies and access requirements. We review available APIs, define how credentials are managed, and agree how the system will be deployed and maintained.",
+                    list: [
+                      "Review third-party access and dependencies",
+                      "Keep secrets out of client applications",
+                      "Plan deployment, maintenance, and handover",
+                    ],
+                  },
+                ].map((item) => (
+                  <section key={item.eyebrow} className="page-section">
+                    <div>
+                      <span className="eyebrow">{item.eyebrow}</span>
+                      <h2 style={{ whiteSpace: "pre-line" }}>{item.title}</h2>
+                    </div>
+                    <div>
+                      <p>{item.body}</p>
+                      <ul>
+                        {item.list.map((x) => (
+                          <li key={x}>{x}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </section>
+                ))}
+              </>
+            )}
+            {slug === "tools" && (
+              <div className="service-grid">
+                {[
+                  {
+                    title: "Email Finder",
+                    body: "Find professional email addresses for your next relevant conversation.",
+                    href: "https://www.mayratic.com/tools/email-finder",
+                  },
+                  {
+                    title: "Email Verifier",
+                    body: "Check addresses before outreach using Mayratic’s email verification tool.",
+                    href: "https://www.mayratic.com/tools/email-verifier",
+                  },
+                  {
+                    title: "Outreach Generator",
+                    body: "Prepare a more considered opening message for your next prospect.",
+                    href: "https://www.mayratic.com/tools/outreach-generator",
+                  },
+                ].map((tool, i) => (
+                  <article key={tool.title} className="service-card">
+                    <span className="eyebrow">0{i + 1} / FREE TOOL</span>
+                    <h2>{tool.title}</h2>
+                    <p>{tool.body}</p>
+                    <a href={tool.href} target="_blank" rel="noreferrer">
+                      Open {tool.title}
+                      <Arrow />
+                    </a>
+                  </article>
+                ))}
+              </div>
+            )}
+            {slug === "contact" && (
+              <div className="contact-page-grid">
+                <div className="contact-page-info">
+                  <h2>
+                    A conversation.
+                    <br />A clearer next step.
+                  </h2>
+                  <p>
+                    Book a 30-minute call to discuss your project, understand the scope, and explore how we
+                    can help.
+                  </p>
+                  <a href={contactInfo.calendly} target="_blank" rel="noreferrer">
+                    Book a call <Arrow />
+                  </a>
+                  <span className="eyebrow">DUBAI, UNITED ARAB EMIRATES</span>
+                  <p>
+                    Clover Bay Tower, 8th Floor
+                    <br />
+                    Marasi Drive, Business Bay
+                    <br />
+                    Dubai, UAE
+                  </p>
+                  <a href={contactInfo.phoneHref}>
+                    +971 58 256 8057 <Arrow />
+                  </a>
+                  <a href={contactInfo.whatsapp} target="_blank" rel="noreferrer">
+                    Talk on WhatsApp <Arrow />
+                  </a>
+                </div>
+                <ContactForm />
+              </div>
+            )}
+            {slug === "about" && (
+              <>
+                <section className="page-section founder-section">
+                  <div>
+                    <img src="/founder.jpg" alt="Abdoul Salam Ally, Founder and CEO of Mayratic" />
+                  </div>
+                  <div>
+                    <span className="eyebrow">A NOTE FROM OUR FOUNDER</span>
+                    <h2>“Everyone is selling AI. Almost no one is shipping it.”</h2>
+                    <p>
+                      We build the opposite way. We sit inside your business, learn how it truly runs, and
+                      craft software that earns its place.
+                    </p>
+                    <span className="founder-name">Abdoul Salam Ally</span>
+                    <span className="eyebrow">FOUNDER & CEO, MAYRATIC</span>
+                  </div>
+                </section>
+                <section className="page-section">
+                  <div>
+                    <span className="eyebrow">FROM DUBAI, OUTWARD</span>
+                    <h2>
+                      Ideas become
+                      <br />
+                      working systems.
+                    </h2>
+                  </div>
+                  <div>
+                    <p>
+                      Mayratic brings design, software engineering, and intelligent automation together. We
+                      build custom products and develop our own platforms for business operations, sales, and
+                      real estate.
+                    </p>
+                    <p>
+                      We also work across branding and premium packaging, connecting the digital experience to
+                      the physical touchpoints of a business.
+                    </p>
+                    <Link className="btn btn-outline" href="/products/">
+                      Meet our products <Arrow />
+                    </Link>
+                  </div>
+                </section>
+              </>
+            )}
+            {slug !== "contact" && (
+              <section className="page-closing">
+                <h2>
+                  Let’s build
+                  <br />
+                  what comes next.
+                </h2>
+                <p>Tell us where the work could work better.</p>
+                <button className="btn" onClick={() => contact()}>
+                  Talk to our team <Arrow />
+                </button>
+              </section>
+            )}
+          </div>
+        )}
+      </div>
+    </main>
+  );
 }
 
-function Faqs(){return <section className="faq-list"><h2>A few useful answers.</h2>{commonFaqs.map(([q,a])=><details key={q}><summary>{q}</summary><p>{a}</p></details>)}</section>;}
+function Faqs() {
+  return (
+    <section className="faq-list">
+      <h2>A few useful answers.</h2>
+      {commonFaqs.map(([q, a]) => (
+        <details key={q}>
+          <summary>{q}</summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </section>
+  );
+}
