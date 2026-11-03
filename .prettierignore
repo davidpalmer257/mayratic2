@@ -1,0 +1,9 @@
+.next
+out
+node_modules
+package-lock.json
+# Vendored / generated content
+src/styles/design-system.css
+src/content/home-sections.json
+public
+docs

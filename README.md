@@ -24,7 +24,7 @@ A fast, fully static site: a homepage plus ten content pages (services, AI & aut
 ### Highlights
 
 - **Interactive hero.** A canvas-rendered, four-layer "context stack" (Discover, Design, Build, Live) driven by GSAP, with a clickable phase control.
-- **Scroll-driven motion.** GSAP and ScrollTrigger reveal sections, draw SVG curves and stage the build-chat sequence.
+- **Scroll-driven motion.** GSAP, ScrollTrigger and Lenis smooth scroll drive masked headline reveals, stacked process panels, parallax imagery, drawn section rules, chapter navigation and a label-morphing cursor. All of it is skipped for visitors who prefer reduced motion.
 - **Project assessment.** A five-step questionnaire that suggests a starting point and prefills the contact form with the answers.
 - **Booking flow.** The contact form hands name, email and project context to a prefilled Calendly booking.
 - **Product showcase.** Biscon, OrbitLead and Domora, with an illustrative product-console demo.
@@ -33,13 +33,13 @@ A fast, fully static site: a homepage plus ten content pages (services, AI & aut
 
 ## Tech stack
 
-| Area | Choice |
-| --- | --- |
-| Framework | Next.js 16 (App Router, static export) |
-| UI | React 19, TypeScript |
-| Styling | Tailwind CSS 4 plus hand-written component CSS |
-| Animation | GSAP 3 with ScrollTrigger and the Canvas 2D API |
-| Typography | Saans and JetBrains Mono, self-hosted |
+| Area       | Choice                                          |
+| ---------- | ----------------------------------------------- |
+| Framework  | Next.js 16 (App Router, static export)          |
+| UI         | React 19, TypeScript                            |
+| Styling    | Tailwind CSS 4 plus hand-written component CSS  |
+| Animation  | GSAP 3 with ScrollTrigger and the Canvas 2D API |
+| Typography | Saans and JetBrains Mono, self-hosted           |
 
 ## Getting started
 
@@ -56,17 +56,20 @@ Open the address printed in the terminal (the dev server binds to `127.0.0.1`).
 
 ### Scripts
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Start the development server |
-| `npm run typecheck` | Type-check the project with `tsc --noEmit` |
-| `npm run build` | Create the static export in `out/` |
-| `npm run start` | Serve a production build locally |
+| Command                | What it does                                                    |
+| ---------------------- | --------------------------------------------------------------- |
+| `npm run dev`          | Start the development server                                    |
+| `npm run typecheck`    | Type-check the project with `tsc --noEmit`                      |
+| `npm run lint`         | Lint with ESLint (Next.js core-web-vitals and TypeScript rules) |
+| `npm run format`       | Format the codebase with Prettier                               |
+| `npm run format:check` | Verify formatting without changing files                        |
+| `npm run build`        | Create the static export in `out/`                              |
+| `npm run start`        | Serve a production build locally                                |
 
 ## Configuration
 
-| Variable | Purpose | Default |
-| --- | --- | --- |
+| Variable               | Purpose                                                           | Default                  |
+| ---------------------- | ----------------------------------------------------------------- | ------------------------ |
 | `NEXT_PUBLIC_SITE_URL` | Production origin used for metadata, the sitemap and `robots.txt` | https://www.mayratic.com |
 
 Set it when building for the live domain:
@@ -108,7 +111,18 @@ public/                   Fonts, images and static assets
 
 ## Quality checks
 
-GitHub Actions runs the type-check and a production build on every push and pull request. See [.github/workflows/ci.yml](.github/workflows/ci.yml).
+GitHub Actions runs lint, a formatting check, the type-check and a production build on every push and pull request. See [.github/workflows/ci.yml](.github/workflows/ci.yml). Run the same checks locally before opening a pull request:
+
+```sh
+npm run lint && npm run format:check && npm run typecheck && npm run build
+```
+
+## Contributing
+
+- Branch from `main` and open a pull request; keep changes focused.
+- Write commit messages in the [Conventional Commits](https://www.conventionalcommits.org) style (`feat:`, `fix:`, `docs:`, `refactor:`).
+- Shared contact details (booking link, WhatsApp, phone) live in `src/lib/site.ts`. Do not hard-code them in components.
+- Motion belongs in `src/components/motion.tsx` and must respect `prefers-reduced-motion`.
 
 ## Notes
 
