@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import { useRef } from "react";
 import { Arrow } from "./icons";
 import { ContactForm, useContact } from "./site-shell";
 import { Assessment } from "./assessment";
@@ -27,7 +26,6 @@ export function ContentPage({slug}:{slug:string}){
  const intro=intros[slug];
  const contact=useContact();
  const root=useRef<HTMLElement>(null);
- useEffect(()=>{if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const context=gsap.context(()=>{gsap.fromTo(".page-intro>*",{opacity:0,y:18},{opacity:1,y:0,duration:.8,stagger:.12,ease:"power2.out"});},root);return()=>context.revert();},[slug]);
  return <main id="main" className="inner-main" ref={root}><div className="site-rail-medium"><section className="page-intro"><div><span className="eyebrow">{intro.eyebrow}</span><h1>{intro.title}</h1>{!["assessment","contact"].includes(slug)&&<button className="btn btn-dark" onClick={()=>contact()}>Talk to our team <Arrow/></button>}</div><p>{intro.body}</p></section>
  {slug==="assessment"?<Assessment/>:<div className="page-content">
  {slug==="services"&&<><div className="service-grid">{serviceItems.map(item=><article className="service-card" key={item.number}><span className="eyebrow">{item.number} / MAYRATIC</span><h2>{item.title}</h2><p>{item.description}</p><button onClick={()=>contact(`I’d like to discuss ${item.title.toLowerCase()}.`)}>Let’s explore it <Arrow/></button></article>)}</div><Faqs/></>}

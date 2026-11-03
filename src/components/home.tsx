@@ -22,8 +22,11 @@ export function Home() {
     const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if(reduced)return;
     const context=gsap.context(()=>{
-      gsap.fromTo(".home-hero h1, .home-hero .hero-subhead, .home-hero .hero-actions", {opacity:0,y:20},{opacity:1,y:0,stagger:.12,duration:.9,ease:"power3.out",delay:.1});
-      gsap.fromTo(".context-stack",{opacity:0},{opacity:1,duration:1.4,delay:.3});
+      // The h1 is split into masked lines by PageMotion; the rest of the hero follows it.
+      gsap.fromTo(".home-hero .hero-subhead, .home-hero .hero-actions > *", {opacity:0,y:24},{opacity:1,y:0,stagger:.12,duration:.9,ease:"power3.out",delay:.55,clearProps:"opacity,transform"});
+      gsap.fromTo(".proof-band .eyebrow, .proof-products a, .proof-location",{opacity:0,y:14},{opacity:1,y:0,stagger:.07,duration:.7,ease:"power2.out",delay:.9,clearProps:"opacity,transform"});
+      gsap.fromTo(".context-stack",{opacity:0,scale:.94,y:30},{opacity:1,scale:1,y:0,duration:1.6,delay:.3,ease:"power3.out"});
+      gsap.fromTo(".stack-source",{opacity:0,x:-14},{opacity:1,x:0,stagger:.2,duration:.8,delay:1.1,ease:"power2.out",clearProps:"opacity,transform"});
       gsap.utils.toArray<HTMLElement>(".content-fragment > section > div, .demo-frame, .products-section h2").forEach(el=>gsap.fromTo(el,{opacity:0,y:22},{opacity:1,y:0,duration:.85,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 93%",once:true}}));
       gsap.utils.toArray<SVGPathElement>(".mayratic-fig__curve").forEach(path=>gsap.fromTo(path,{strokeDasharray:"0 1"},{strokeDasharray:"1 1",duration:2,scrollTrigger:{trigger:path,start:"top 90%",once:true},ease:"power2.inOut"}));
       gsap.fromTo("[data-chat-step]",{opacity:0,y:12},{opacity:1,y:0,duration:.6,stagger:.8,ease:"power2.out",scrollTrigger:{trigger:".build-chat",start:"top 85%",once:true}});

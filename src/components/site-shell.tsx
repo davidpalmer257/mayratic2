@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useRef, useState, type FormEvent } from "react";
 import gsap from "gsap";
 import { Arrow, Brand, Cross } from "./icons";
+import { PageMotion } from "./motion";
 
 const ContactContext = createContext<(message?: string) => void>(() => {});
 export const useContact = () => useContext(ContactContext);
@@ -22,6 +23,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   useEffect(() => { setContact(null); }, [pathname]);
   return <ContactContext.Provider value={(message = "") => setContact(message)}>
     <a className="skip-link" href="#main">Skip to content</a>
+    <PageMotion />
     <Header />
     {children}
     <Footer onCookies={() => setCookies(true)} />
@@ -46,7 +48,13 @@ function Header() {
     return () => { window.removeEventListener("scroll", update); document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", key); };
   }, []);
   useEffect(() => {
-    if ((menu || mobile) && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) gsap.fromTo(".nav-expanded", { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: .25 });
+    if (!(menu || mobile) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const panel = root.current?.querySelector(".nav-expanded");
+    if (!panel) return;
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.fromTo(panel, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: .35, clearProps: "transform" })
+      .from(panel.querySelectorAll("a, button, .eyebrow"), { opacity: 0, y: 10, duration: .4, stagger: .035, clearProps: "opacity,transform" }, "-=.2");
+    return () => { tl.kill(); };
   }, [menu, mobile]);
   return <header ref={root} className={`site-header ${scrolled || menu || mobile ? "is-scrolled" : ""}`}>
     <div className="nav-inner">
@@ -58,7 +66,7 @@ function Header() {
       <div className="nav-actions"><Link className="nav-products" href="/products/">Our products</Link><button className="btn btn-dark nav-contact" onClick={() => contact()}>Talk to our team <Arrow /></button><button className="mobile-toggle" aria-label={mobile ? "Close navigation" : "Open navigation"} aria-expanded={mobile} aria-controls="mobile-nav" onClick={() => setMobile(!mobile)}>{mobile ? <Cross /> : <span><i/><i/></span>}</button></div>
     </div>
     {menu && <div id="resources-menu" className="resources-menu nav-expanded">{resources.map(group => <div key={group.label}><span className="eyebrow">{group.label}</span>{group.links.map(([label, href, description]) => <Link key={href} href={href}><span>{label}<Arrow /></span><small>{description}</small></Link>)}</div>)}</div>}
-    {mobile && <nav id="mobile-nav" className="mobile-nav nav-expanded" aria-label="Mobile">{nav.map(([label, href]) => <Link key={href} href={href}>{label}<Arrow/></Link>)}{resources.flatMap(group => group.links).map(([label, href]) => <Link key={href} href={href}>{label}<Arrow/></Link>)}<button className="btn btn-dark" onClick={() => { setMobile(false); contact(); }}>Talk to our team <Arrow/></button></nav>}
+    {mobile && <nav id="mobile-nav" data-lenis-prevent className="mobile-nav nav-expanded" aria-label="Mobile">{nav.map(([label, href]) => <Link key={href} href={href}>{label}<Arrow/></Link>)}{resources.flatMap(group => group.links).map(([label, href]) => <Link key={href} href={href}>{label}<Arrow/></Link>)}<button className="btn btn-dark" onClick={() => { setMobile(false); contact(); }}>Talk to our team <Arrow/></button></nav>}
   </header>;
 }
 
@@ -69,10 +77,15 @@ export function Dialog({ children, onClose, label, className = "" }: { children:
     document.body.style.overflow = "hidden";
     dialog.current?.showModal();
     const el = dialog.current;
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) gsap.fromTo(el, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: .3, ease: "power2.out", clearProps: "transform" });
-    return () => { document.body.style.overflow = previousOverflow; };
+    let tl: gsap.core.Timeline | undefined;
+    if (el && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.fromTo(el, { opacity: 0, y: 24, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .5, clearProps: "transform" })
+        .from(el.querySelectorAll(".contact-intro > *, .field, .form-note, .btn, .eyebrow, h2, p, .cookie-choice"), { opacity: 0, y: 14, duration: .45, stagger: .035, clearProps: "opacity,transform" }, "-=.3");
+    }
+    return () => { tl?.kill(); document.body.style.overflow = previousOverflow; };
   }, []);
-  return <dialog ref={dialog} className={`site-dialog ${className}`} aria-label={label} onCancel={onClose} onClick={e => { if (e.target === e.currentTarget) onClose(); }}><button className="dialog-close" aria-label="Close dialog" onClick={onClose}><Cross/></button>{children}</dialog>;
+  return <dialog ref={dialog} data-lenis-prevent className={`site-dialog ${className}`} aria-label={label} onCancel={onClose} onClick={e => { if (e.target === e.currentTarget) onClose(); }}><button className="dialog-close" aria-label="Close dialog" onClick={onClose}><Cross/></button>{children}</dialog>;
 }
 
 function ContactDialog({ initialMessage, onClose }: { initialMessage: string; onClose: () => void }) {

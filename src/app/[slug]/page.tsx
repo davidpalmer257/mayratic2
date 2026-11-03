@@ -15,5 +15,5 @@ export async function generateMetadata({ params }: { params: Promise<{slug:strin
 export default async function Page({ params }: { params: Promise<{slug:string}> }) {
   const { slug } = await params;
   if (!pageMeta[slug]) notFound();
-  return <ContentPage slug={slug}/>;
+  return <ContentPage key={slug} slug={slug}/>;
 }
